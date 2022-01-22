@@ -1,0 +1,41 @@
+---
+#- name: Shut down docker
+#  hosts: localhost
+#  gather_facts: no
+#  tasks:
+
+
+#    - name: Stop all services [Using docker-compose.yml]
+#      docker_compose:
+#        project_src: app
+#        build: no
+#        stopped: yes
+#      register: output
+#
+#    - ansible.builtin.debug:
+#        var: output
+
+
+
+- name: Stop all services [Using ansible playbook]
+  docker_compose:
+    project_name: stockapp
+    build: no
+    stopped: yes
+    definition:
+      version: '2'
+      services:
+        web:
+          image: sungmindocker/skeleton:stockapp_v1
+        db:
+          image: postgres:10
+
+  register: output
+
+- ansible.builtin.debug:
+    var: output
+
+- assert:
+    that:
+      - "not output.services.web.stockapp_web_1.state.running"
+      - "not output.services.db.stockapp_db_1.state.running"

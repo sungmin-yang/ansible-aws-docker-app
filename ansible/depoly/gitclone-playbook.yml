@@ -1,0 +1,73 @@
+---
+- hosts: aws
+
+  become: yes
+  become_method: sudo
+  remote_user: ubuntu
+
+  vars:
+    stock_app_dir: /var/local/stockapp
+    git_repo: https://github.com/mehemken/docker-flask-postgres.git
+#    git_repo: https://github.com/sungmin-yang/ansible-test.git
+
+
+  tasks:
+#  - name: Install required system packages
+#    apt: name={{ item }} state=latest update_cache=yes
+#    loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+#
+#  - name: Add Docker GPG apt Key
+#    apt_key:
+#      url: https://download.docker.com/linux/ubuntu/gpg
+#      state: present
+#
+#  - name: Add Docker Repository
+#    apt_repository:
+#      repo: deb https://download.docker.com/linux/ubuntu bionic stable
+#      state: present
+#
+#  - name: Update apt and install docker-ce
+#    apt: update_cache=yes name=docker-ce state=latest
+
+  - name: Install Docker Module for Python
+    pip:
+      name:
+        - docker
+        - docker-compose
+
+#  Simple ... but with shell
+#  - name: Install Docker
+#    ansible.builtin.shell: cd ~ && curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh
+
+
+  - name: Delete previous app content & directory
+    file:
+      state: absent
+      path: '{{ stock_app_dir }}'
+
+
+  - name: Clone a git repo
+    git:
+#      repo: https://github.com/sungmin-yang/ansible-test.git
+      repo: '{{git_repo}}'
+      dest: '{{ stock_app_dir }}'
+
+
+#  - name: Find out playbook's path
+#    shell: pwd
+#    register: playbook_path_output
+#  - debug: var=playbook_path_output.stdout
+#
+
+  - name: Create and start services
+    community.docker.docker_compose:
+      project_src: '{{stock_app_dir}}/app'
+      build: yes
+      state: present
+    register: output
+
+#  - name: Copy and Execute the script
+#    script: /home/ubuntu/stockapp/run.py
+#    register: output
+#
+#  - debug: var=output.stdout_lines

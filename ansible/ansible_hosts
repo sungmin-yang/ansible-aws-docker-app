@@ -1,0 +1,5 @@
+[hosts_to_add_key]
+ec2-54-167-133-166.compute-1.amazonaws.com ansible_user=ubuntu
+
+[hosts_to_add_key:vars]
+ansible_ssh_common_args="-o StrictHostKeyChecking=no"

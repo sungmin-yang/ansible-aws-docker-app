@@ -1,0 +1,8 @@
+- name: Specifying a destination path
+  ansible.builtin.fetch:
+    src: /tmp/gathered_data.csv
+    dest: /tmp/gathered_data.csv
+    flat: yes
+
+
+# https://docs.ansible.com/ansible/latest/collections/ansible/builtin/fetch_module.html

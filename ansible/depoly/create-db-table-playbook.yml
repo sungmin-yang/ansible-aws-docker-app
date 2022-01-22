@@ -1,0 +1,78 @@
+---
+    # Usicommunity.postgresql collection
+    # https://docs.ansible.com/ansible/latest/collections/community/postgresql/index.html
+    # To install it, use: ansible-galaxy collection install community.postgresql.
+  # To use it in a playbook, specify: community.postgresql.postgresql_query.
+
+  # on Mac, urlopen error [SSL: CERTIFICATE_VERIFY_FAILED]
+  # >wpip inpip install certifi
+
+
+  # Get docker ip to test on your local machine
+  # > docker inspect  docker-flask-postgres_db_1 | grep -i "IPaDDreSS"
+  # "IPAddress": "172.19.0.2",
+- hosts: docker
+  tasks:
+    - name: Select query to db acme with positional arguments and non-default credentials
+      community.postgresql.postgresql_query:
+        db: testdb
+        port: 5432
+        login_user: admin
+        login_host: localhost
+        login_password: password
+        query: SELECT * FROM Students;
+      register: "out"
+
+    - name: Show test output
+      debug:
+        msg: "{{ out }}"
+
+
+    - name: Insert data into table
+      community.postgresql.postgresql_query:
+        db: testdb
+        port: 5432
+        login_user: admin
+        login_host: localhost
+        login_password: password
+        query: INSERT INTO Students (addr, city, name) VALUES ('Q', 'W', 'E');
+      register: "out"
+
+    - name: Show test output
+      debug:
+        msg: "{{ out }}"
+
+
+
+
+#    - name: Create test_table with several columns in ssd tablespace with fillfactor=10 and autovacuum_analyze_threshold=1
+#      community.general.postgresql_table:
+#        name: Stocks
+#        columns:
+#        - id int primary key
+#        - date date
+#        - high real
+#        - company string
+#
+#        tablespace: ssd
+#        storage_params:
+#        - fillfactor=10
+#        - autovacuum_analyze_threshold=1
+
+
+#- name: Ensure db table for temp is present
+#  postgresql_table:
+#    db: myDatabase
+#    table: myTable
+#    columns:
+#    - someColumn TEXT COLLATE "C" NOT NULL
+#    - anotherColumn TEXT COLLATE "C" PRIMARY KEY
+#    - bla BYTEA PRIMARY KEY
+#    - CONSTRAINT  mykey PRIMARY KEY (anotherColumn, bla)
+#
+#- name: Ensure temp-db-index is present
+#  postgresql_idx:
+#    db: myDatabase
+#    table: myTable
+#    columns: anotherColumn
+#    name: anotherColumn_idx

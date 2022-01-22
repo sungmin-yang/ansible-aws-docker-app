@@ -1,0 +1,11 @@
+---
+- name: Install docker
+  package:
+    name: docker
+    state: present
+
+- name: Installing necessary pip packages.
+  pip:
+    name:
+      - docker==5.0.3
+      - docker-compose==1.29.2
