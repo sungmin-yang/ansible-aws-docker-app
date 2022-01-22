@@ -73,9 +73,9 @@ class Report(object):
         bottom_plt = plt.subplot2grid((5, 4), (3, 0), rowspan=10, colspan=40)  # hspace = 0.5
         bottom_plt.bar(self.df.index, self.df['volume'])
 
-        plt.subplots_adjust(bottom=.05, top=.85, hspace=1)
+        plt.subplots_adjust(bottom=.10, top=.85, hspace=1)
 
-        plt.title('\nApple Trading Volume', y=-0.2)
+        plt.title('\nTrading Volume', y=-0.6)
         plt.gcf().set_size_inches(12, 8)
 
         self.logger.info("Current dir: " + os.getcwd())

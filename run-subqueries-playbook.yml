@@ -1,0 +1,27 @@
+---
+#- import_playbook: install-requirements-playbook.yml
+#- import_playbook: docker-compose-playbook.yml
+
+- name: A playbook runs all tasks...
+  hosts: localhost
+  gather_facts: no
+
+  vars:
+    sub_playbooks_dir: "{{ playbook_dir }}/tasks"
+    stock_app_dir: /Users/sungmin/Desktop/job-application/swedbank/temp
+    git_repo: https://github.com/mehemken/docker-flask-postgres.git
+
+
+  tasks:
+#    - import_tasks: "{{ sub_playbooks_dir }}/install-requirements-playbook.yml"
+    - import_tasks: "{{ sub_playbooks_dir }}/docker-compose-playbook.yml"
+
+
+#    - import_tasks: "{{ sub_playbooks_dir }}/install-tools-and-git-playbook.yml"
+
+
+    - name: Pause for 30 s to build app cache
+      pause:
+        seconds: 30
+
+    - import_tasks: "{{ sub_playbooks_dir }}/docker-down-playbook.yml"

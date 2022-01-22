@@ -1,0 +1,12 @@
+FROM  bayesimpact/pandas-base
+WORKDIR /home/app/
+RUN apt-get update
+
+#Run apt-get install --no-cache postgresql-dev
+RUN apt-get install -y gcc musl-dev
+RUN apt-get install -y python3-dev
+
+Run apt-get install libjpeg-dev libpng-dev zlib1g-dev
+RUN pip install matplotlib flask flask requests flask-sqlalchemy psycopg2 pillow setuptools
+
+EXPOSE 5000

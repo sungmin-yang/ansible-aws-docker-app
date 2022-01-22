@@ -93,42 +93,15 @@ def report():
     from generate_report import Report
     sample_df = pd.read_csv(os.getcwd() + '/data/big_df.csv', index_col=False)
     report = Report(sample_df)
-    report.draw_chart(fname="./static/test.png")
+    report.draw_chart(fname="./static/testt.png")
     # rendered_chart = report.render_for_html(format="png")
 
     return render_template("report.html",
-                           chart_image="/home/app/static/test.png",
+                           chart_image="/home/app/static/testt.png",
                            best_day=report.get_best_stock_day(),
                            worst_day=report.get_worst_stock_day()
                            )
 
-
-
-# @app.route("/graph")
-# def graph():
-#     sample_df = pd.read_csv(os.getcwd() + '/data/sample.csv', index_col=False).drop('Open', axis=1)
-#     chart_data = sample_df.to_dict(orient='records')
-#     chart_data = json.dumps(chart_data, indent=2)
-#     return render_template("graph.html", data={'chart_data': chart_data})
-
-
-# @app.route("/graph2")
-# def graph2():
-#     df = pd.read_csv(os.getcwd() + '/data/big_df.csv', index_col=False)
-#     # id, open, high, low, close, volume, adj_close, company, exchange, date
-#     # 0, 171.34, 173.78, 171.09, 173.07, 80355000.0, 173.07, AAPL, XNAS, 2022 - 01 - 14 00: 00:00 + 00: 00
-#     df = df[[ 'high', 'low', 'close','company','date']]
-#     df.rename(columns={"high": "High",
-#                        "low": "Low",
-#                        "close": "Close",
-#                        "company": "Company",
-#                        "date": "Date"
-#                        }, inplace=True)
-#     chart_data = df.to_dict(orient='records')
-#     chart_data = json.dumps(chart_data, indent=2)
-#     return render_template("graph2.html", data={'chart_data': chart_data,
-#                                                 'high_value': json.dumps({"high_day": "2020-01-01"})
-#                                                 })
 
 
 # ---------------------  Web page rendering  END ---------------------
