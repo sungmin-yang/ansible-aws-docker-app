@@ -120,6 +120,9 @@ if __name__ == '__main__':
                          company_symbol='AAPL', date_from='2019-01-08', date_to='2022-01-14')
     stock_api.get_api_result()
     stock_api.transform_to_dataframe()
+    stock_api.save_dataframe_to_csv("data/ec2_generated.csv")
+
+
 
     stockdb = StockDB(POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB)
     stockdb.connect_db()

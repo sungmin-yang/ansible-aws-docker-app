@@ -17,9 +17,13 @@ class StockDB(object):
 
                  db_ip: str='localhost',
                  db_port: int=5432,
-                 db_type: str='postgresql'):
+                 db_type: str='postgresql',
+                 db_type_magic = 'postgresql+psycopg2'
+                 ):
         logger.info("Creating StockDB...")
         self.conn_string = f'{db_type}://{db_id}:{db_password}@{db_ip}:{db_port}/{db_name}'
+        # SQLite allows a raw connection for the pd.to_sql, we need to combine with psycopg2.
+        self.conn_string_magic = f'{db_type_magic}://{db_id}:{db_password}@{db_ip}:{db_port}/{db_name}'
         self.conn_string_masked = f'{db_type}://{db_id}:********@localhost:{db_port}/{db_name}'
         self.db = None
         self.conn = None
@@ -27,11 +31,11 @@ class StockDB(object):
 
     def connect_db(self):
         logger.info("Connecting to db server %s...", self.conn_string_masked )
-        # self.db = create_engine(self.conn_string)
-        # self.conn = self.db.connect()
-        self.conn = psycopg2.connect(self.conn_string)
-        # con = psycopg2.connect(host="localhost", port=5432, dbname="mydb", user="myuser", password="mypwd")
+        self.db = create_engine(self.conn_string)
+        self.engine = create_engine(self.conn_string_magic)
 
+        self.conn = self.db.connect()
+        self.conn = psycopg2.connect(self.conn_string)
         self.conn.autocommit = True
         self.cursor = self.conn.cursor()
 

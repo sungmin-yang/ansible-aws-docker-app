@@ -74,8 +74,8 @@ class StockAPI(object):
 
         return self.df
 
-    def save_dataframe_to_csv(self, path: str="mounted_data/100rows.csv") -> None:
+    def save_dataframe_to_csv(self, path: str="data/100rows.csv") -> None:
         self.df.to_csv(path, index=False, index_label=False)
 
-    def read_dataframe_to_csv(self, path: str="mounted_data/100rows.csv") -> None:
+    def read_dataframe_to_csv(self, path: str="data/100rows.csv") -> None:
         self.df.read_csv(path, index_col=False)
