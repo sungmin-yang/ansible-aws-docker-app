@@ -5,7 +5,6 @@ version: "2"
 services:
   stockapp:
     image: sungmindocker/skeleton:stockapp_v1_3_amd64
-#    image: sungmindocker/skeleton:stockapp_v1
 #    build: .
     env_file: .env
     command: python3 app.py
@@ -13,7 +12,7 @@ services:
       - "5000:5000"
     volumes:
       - ./app:/home/app
-      - ./files:/home/app/mounted_data
+      - ./files:/home/app/data
     depends_on:
       - db
   db:
