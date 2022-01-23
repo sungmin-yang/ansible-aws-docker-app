@@ -121,7 +121,7 @@ if __name__ == '__main__':
     stock_api.get_api_result()
     stock_api.transform_to_dataframe()
 
-    stockdb = StockDB("sunyan", 1234, "stockdb")
+    stockdb = StockDB(POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB)
     stockdb.connect_db()
     stockdb.exec_query('''select * from stockhistory;''')
 
