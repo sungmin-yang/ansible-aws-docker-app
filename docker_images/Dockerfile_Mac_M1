@@ -1,7 +1,4 @@
-# Flask image
-
 FROM alpine:3.13
-#FROM python:3.8-alpine
 RUN apk add build-base
 
 ADD requirements.txt /home/app/
@@ -20,5 +17,4 @@ Run apk add jpeg-dev zlib-dev && \
     pip3 install -r requirements.txt
 
 EXPOSE 5000
-
 #ENTRYPOINT ["python3", "app.py"]

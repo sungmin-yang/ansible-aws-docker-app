@@ -1,10 +1,19 @@
 ---
 #- name: Run instances with docker compose up
+
+- name: Copy credential file to remote for docker-compose.
+  copy:
+    src: .env
+    dest: "{{ stock_app_dir }}"
+
+
+- name: Ensure there are no same docker conatiners are running.
 - docker_compose:
     project_src: app
     state: absent
 
-- docker_compose:
+- name: Running app and db server with docker-compose up
+  docker_compose:
     project_name: stockapp
     definition:
       version: '2'
@@ -31,10 +40,14 @@
 
 - debug:
     var: output
+
 - assert:
     that:
-      - "output.services.web.stockapp_web_1.state.running"
+#      - "output.services.web.stockapp_web_1.state.running"
+#      - "output.services.db.stockapp_db_1.state.running"
+
       - "output.services.db.stockapp_db_1.state.running"
+      - "output.services.stockapp.stockapp_stockapp_1.state.running"
 
 
 #    - name: Get infos on container

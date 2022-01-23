@@ -4,6 +4,8 @@ import pandas as pd
 
 import stock_api_logger
 import utils
+from stockDB import StockDB
+from stockAPI import StockAPI
 
 from constants import (
 POSTGRES_USER,
@@ -112,5 +114,18 @@ def report():
 
 if __name__ == '__main__':
     utils.setup_database(app, db)
+
+
+    stock_api = StockAPI(access_key='6ca0f0f7528f082e26b191f19f84ff15',
+                         company_symbol='AAPL', date_from='2019-01-08', date_to='2022-01-14')
+    stock_api.get_api_result()
+    stock_api.transform_to_dataframe()
+
+    stockdb = StockDB("sunyan", 1234, "stockdb")
+    stockdb.connect_db()
+    stockdb.exec_query('''select * from stockhistory;''')
+
+
+
     # utils.wait_until_db_setup(db)
     app.run(debug=True, host='0.0.0.0', port=5000)

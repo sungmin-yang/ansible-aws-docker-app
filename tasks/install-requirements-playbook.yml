@@ -1,11 +1,33 @@
 ---
-- name: Install docker
-  package:
-    name: docker
+#- name: Install docker
+#  package:
+#    name: docker
+#    state: present
+
+- name: Install required system packages
+  apt: name={{ item }} state=latest update_cache=yes
+  loop: [ 'apt-transport-https', 'ca-certificates', 'curl', 'software-properties-common', 'python3-pip', 'virtualenv', 'python3-setuptools']
+
+- name: Add Docker GPG apt Key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
     state: present
+
+- name: Add Docker Repository
+  apt_repository:
+    repo: deb https://download.docker.com/linux/ubuntu bionic stable
+    state: present
+
+- name: Update apt and install docker-ce
+  apt: update_cache=yes name=docker-ce state=latest
 
 - name: Installing necessary pip packages.
   pip:
     name:
-      - docker==5.0.3
-      - docker-compose==1.29.2
+      - docker>=5.0.3
+      - docker-compose>=1.29.2
+      - psycopg2-binary
+      - SQLAlchemy
+#  Simple ... but with shell
+#  - name: Install Docker
+#    ansible.builtin.shell: cd ~ && curl -fsSL https://get.docker.com -o get-docker.sh && sudo sh get-docker.sh

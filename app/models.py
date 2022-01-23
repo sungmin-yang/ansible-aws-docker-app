@@ -26,10 +26,10 @@ class Stocks(db.Model):
     logger.info("Creating Student table...")
     id = db.Column('id', db.Integer, primary_key=True)
     date = db.Column('date', db.DateTime)
-    high = db.Column('high', db.REAL(10))
+    close = db.Column('high', db.REAL(10))
     company = db.Column('company', db.String(20))
-    def __init__(self, id, date, high, company):
+    def __init__(self, id, date, close, company):
         self.id = id
         self.date = date
-        self.high = high
+        self.close = close
         self.company = company
