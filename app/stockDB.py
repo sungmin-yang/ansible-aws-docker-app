@@ -3,7 +3,7 @@ from sqlalchemy import create_engine
 import stock_api_logger
 logger = stock_api_logger.log_factory().getLogger()
 
-CONN_STRING = 'postgresql://sunyan:1234@localhost:5432/stockdb'
+# CONN_STRING = 'postgresql://sunyan:1234@localhost:5432/stockdb'
 # DO SOMETHING WITH OS.ENV
 # CONN_STRING = f'postgresql://{ADMIN}:{PASSWORD}@localhost:{POSTGRES_PORT}/{DB_NAME}'
 
