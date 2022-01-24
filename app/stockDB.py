@@ -25,7 +25,7 @@ class StockDB(object):
         self.conn_string = f'{db_type}://{db_id}:{db_password}@{db_host}:{db_port}/{db_name}'
         # SQLite allows a raw connection for the pd.to_sql, we need to combine with psycopg2.
         self.conn_string_magic = f'{db_type_magic}://{db_id}:{db_password}@{db_host}:{db_port}/{db_name}'
-        self.conn_string_masked = f'{db_type}://{db_id}:********@localhost:{db_port}/{db_name}'
+        self.conn_string_masked = f'{db_type}://{db_id}:********@{db_host}:{db_port}/{db_name}'
         self.db = None
         self.conn = None
         self.cursor = None

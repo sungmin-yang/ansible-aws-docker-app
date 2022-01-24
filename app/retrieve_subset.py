@@ -25,7 +25,7 @@ stockdb.connect_db()
 
 sql = """
     COPY (
-        select * from students limit 10
+        select * from stocks limit 10
     ) TO STDOUT WITH CSV HEADER
 """
 
