@@ -7,7 +7,11 @@ services:
     image: sungmindocker/skeleton:stockapp_v1_3_amd64
 #    build: .
     env_file: .env
-    command: python3 app.py
+#    command: python3 app.py
+    command: "python3 app.py \
+                      --target_company AAPL \
+                      --date_from 2020-01-01 \
+                      --date_to 2021-0101"
     ports:
       - "5000:5000"
     volumes:

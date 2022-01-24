@@ -20,8 +20,8 @@ STOCK_API_KEY
 # Get three args {{ TARGET_COMPANY }} {{ DATE_FROM }} {{ DATE_TO }}
 parser = argparse.ArgumentParser()
 parser.add_argument("-C", "--target_company", help="Type company name that you want to get stock info", required=True)
-parser.add_argument("-F", "--data_from", help="Type date from", required=True)
-parser.add_argument("-T", "--data_to", help="Type date to", required=True)
+parser.add_argument("-F", "--date_from", help="Type date from", required=True)
+parser.add_argument("-T", "--date_to", help="Type date to", required=True)
 args = parser.parse_args()
 
 
