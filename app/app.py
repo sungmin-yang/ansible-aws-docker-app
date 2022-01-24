@@ -93,14 +93,15 @@ def test():
 
 @app.route("/report")
 def report():
-    from generate_report import Report
+    from report import Report
     sample_df = pd.read_csv(os.getcwd() + '/data/big_df.csv', index_col=False)
-    report = Report(sample_df)
-    report.draw_chart(fname="./static/testt.png")
+    myreport = Report(sample_df)
+    myreport.draw_chart(fname="./static/ec2_report.pdf")
+    myreport.draw_chart(fname="./data/ec2_report.pdf")
     # rendered_chart = report.render_for_html(format="png")
 
     return render_template("report.html",
-                           chart_image="/home/app/static/testt.png",
+                           chart_image="/home/app/static/ec2_report.pdf", # Flask check static dir
                            best_day=report.get_best_stock_day(),
                            worst_day=report.get_worst_stock_day()
                            )
@@ -129,7 +130,6 @@ def shutdown():
 
 if __name__ == '__main__':
     utils.setup_database(app, db)
-    app.run(debug=True, host='0.0.0.0', port=5000)
 
     stock_api = StockAPI(access_key=STOCK_API_KEY,
                          company_symbol=args.target_company,
@@ -139,9 +139,12 @@ if __name__ == '__main__':
     stock_api.transform_to_dataframe()
     stock_api.save_dataframe_to_csv("data/ec2_generated.csv")
 
-
     stockdb = StockDB(POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB)
     stockdb.connect_db()
+
+    stock_api.df.to_sql("stocks", stockdb.engine, if_exists='append', index=False)
+
+    app.run(debug=True, host='0.0.0.0', port=5000)
     # Check existing tables
     # stockdb.exec_query("""SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'""")
     # stockdb.exec_query('''select * from stockhistory;''')
