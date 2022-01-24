@@ -94,16 +94,17 @@ def test():
 @app.route("/report")
 def report():
     from report import Report
-    sample_df = pd.read_csv(os.getcwd() + '/data/big_df.csv', index_col=False)
-    myreport = Report(sample_df)
+    # sample_df = pd.read_csv(os.getcwd() + '/data/big_df.csv', index_col=False)
+    # myreport = Report(sample_df)
+
+    stock_api = get_stockAPI()
+    myreport = Report(stock_api.df)
     myreport.draw_chart(fname="./static/ec2_report.pdf")
     myreport.draw_chart(fname="./data/ec2_report.pdf")
     # rendered_chart = report.render_for_html(format="png")
 
     return render_template("report.html",
                            chart_image="/home/app/static/ec2_report.pdf", # Flask check static dir
-                           best_day=report.get_best_stock_day(),
-                           worst_day=report.get_worst_stock_day()
                            )
 
 
@@ -120,6 +121,15 @@ def shutdown():
     return 'Server shutting down...'
 
 
+def get_stockAPI() -> StockAPI:
+    stock_api = StockAPI(access_key=STOCK_API_KEY,
+                         company_symbol=args.target_company,
+                         date_from=args.date_from,
+                         date_to=args.date_to)
+    stock_api.get_api_result()
+    stock_api.transform_to_dataframe()
+    stock_api.save_dataframe_to_csv("data/ec2_generated.csv")
+    return stock_api
 
 
 # ---------------------  Web page rendering  END ---------------------
@@ -131,17 +141,10 @@ def shutdown():
 if __name__ == '__main__':
     utils.setup_database(app, db)
 
-    stock_api = StockAPI(access_key=STOCK_API_KEY,
-                         company_symbol=args.target_company,
-                         date_from=args.date_from,
-                         date_to=args.date_to)
-    stock_api.get_api_result()
-    stock_api.transform_to_dataframe()
-    stock_api.save_dataframe_to_csv("data/ec2_generated.csv")
-
     stockdb = StockDB(POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB)
     stockdb.connect_db()
 
+    stock_api = get_stockAPI()
     stock_api.df.to_sql("stocks", stockdb.engine, if_exists='append', index=False)
 
     app.run(debug=True, host='0.0.0.0', port=5000)
