@@ -1,16 +1,23 @@
 ---
-- name: Delete previous app content & directory
-  file:
-    state: absent
-    path: '{{ stock_app_dir }}'
+- name: Delete and pull new repo & Copy credentials
+  block:
+  - name: Delete previous app content & directory
+    file:
+      state: absent
+      path: '{{ stock_app_dir }}'
 
-- name: Clone a git repo
-  git:
-    repo: '{{git_repo}}'
-    dest: '{{ stock_app_dir }}'
-    force: yes
+  - name: Clone a git repo
+    git:
+      repo: '{{git_repo}}'
+      dest: '{{ stock_app_dir }}'
+      force: yes
 
-  register: output
+    register: output
 
-- debug:
-    var: output
+  - debug:
+      var: output
+
+  - name: Copy credential file to remote for docker-compose.
+    copy:
+      src: .env
+      dest: "{{ stock_app_dir }}"

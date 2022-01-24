@@ -1,53 +1,51 @@
 ---
-#- name: Run instances with docker compose up
+- name: Docker compose up for app and db server
+  block:
 
-- name: Copy credential file to remote for docker-compose.
-  copy:
-    src: .env
-    dest: "{{ stock_app_dir }}"
+  - name: Ensure there are no same docker conatiners are running.
+    docker_compose:
+      project_src: "{{ stock_app_dir }}"
+      state: absent
 
+  - name: Running app and db server with docker-compose up
+    # Written based on docker-compose.yml file.
+    docker_compose:
+      project_name: stockapp
+      definition:
+        version: '2'
+        services:
+          web:
+            image: sungmindocker/skeleton:stockapp_v1_3_amd64
+            env_file: "{{ stock_app_dir }}/.env"
+            command: "python3 app.py \
+                      --target_company {{ target_company }} \
+                      --date_from {{ date_from }} \
+                      --date_to {{ date_to }}"
 
-- name: Ensure there are no same docker conatiners are running.
-- docker_compose:
-    project_src: app
-    state: absent
+            volumes:
+              - "{{ stock_app_dir }}/app:/home/app/"
+              - "{{ ec2_mounted_data_dir }}:/home/app/data"
+            ports:
+              - "5000:5000"
+            depends_on:
+              - db
+          db:
+            image: postgres:10
+            env_file: "{{ stock_app_dir }}/.env"
+            ports:
+              - "5432:5432"
+    register: output
 
-- name: Running app and db server with docker-compose up
-  docker_compose:
-    project_name: stockapp
-    definition:
-      version: '2'
-      services:
-        web:
-          image: sungmindocker/skeleton:stockapp_v1
-          env_file: "{{ playbook_dir }}/.env"
-          #              build: "{{ playbook_dir }}/app"
-          #              command: "python manage.py runserver 0.0.0.0:8000"
-          volumes:
-#                - "{{ playbook_dir }}/flask:/code"
-            - "{{ playbook_dir }}/app:/home/app/"
-            - "{{ playbook_dir }}/app/files:/home/app/files"
-          ports:
-            - "5000:5000"
-          depends_on:
-            - db
-        db:
-          image: postgres:10
-          env_file: "{{ playbook_dir }}/.env"
-          expose:
-            - 5432
-  register: output
+  - debug:
+      var: output
 
-- debug:
-    var: output
-
-- assert:
-    that:
-#      - "output.services.web.stockapp_web_1.state.running"
+  - assert:
+      that:
+        - "output.services.web.stockapp_web_1.state.running"
+        - "output.services.db.stockapp_db_1.state.running"
+#
 #      - "output.services.db.stockapp_db_1.state.running"
-
-      - "output.services.db.stockapp_db_1.state.running"
-      - "output.services.stockapp.stockapp_stockapp_1.state.running"
+#      - "output.services.stockapp.stockapp_stockapp_1.state.running"
 
 
 #    - name: Get infos on container

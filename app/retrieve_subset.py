@@ -9,7 +9,7 @@ parser.add_argument("-U", "--user", help="Type your DB user", required=True)
 parser.add_argument("-P", "--password", help="Type your DB user\'s password", required=True)
 parser.add_argument("-D", "--db", help="Type your DataBase name", required=True)
 parser.add_argument("-H", "--host", help="DB server host name")
-parser.add_argument("-F", "--filename", help="Your filename for saving generated.csv file", default="./data/generated.csv")
+parser.add_argument("-F", "--filename", help="Your filename for saving generated.csv file", default="./data/gathered_data.csv")
 args = parser.parse_args()
 
 

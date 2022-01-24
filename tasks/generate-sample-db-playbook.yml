@@ -1,0 +1,14 @@
+---
+- name: Select query to db acme with positional arguments and non-default credentials
+  community.postgresql.postgresql_query:
+    db: '{{POSTGRES_DB}}'
+    port: '{{POSTGRES_PORT}}'
+    login_user: '{{POSTGRES_USER}}'
+    login_password: '{{POSTGRES_PASSWORD}}'
+    login_host: '{{POSTGRES_LOCAL_HOST}}'
+    query: SELECT * FROM Students;
+  register: "out"
+
+- name: Show test output
+  debug:
+    msg: "{{ out }}"
