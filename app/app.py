@@ -42,7 +42,7 @@ app = utils.get_flask_app(POSTGRES_USER,
                           POSTGRES_DB,
                           APP_KEY)
 
-from models import db, Students  # Require db object
+from models import db, Students, Stocks  # Require db object
 db.init_app(app)
 
 
@@ -51,37 +51,41 @@ db.init_app(app)
 # ---------------------  Web page rendering  START ---------------------
 # ---------------------  Web page rendering  START ---------------------
 # ---------------------  Web page rendering  START ---------------------
-@app.route('/', methods=['GET', 'POST'])
+# @app.route('/', methods=['GET', 'POST'])
+# def home():
+#
+#
+#
+#     if request.method == 'POST':
+#         if not request.form['name'] or not request.form['city'] or not request.form['addr']:
+#             flash('Please enter all the fields', 'error')
+#         else:
+#             student = Students(
+#                 request.form['name'],
+#                 request.form['city'],
+#                 request.form['addr'])
+#             db.session.add(student)
+#             db.session.commit()
+#             flash('Record was successfully added')
+#             return redirect(url_for('home'))
+#     return render_template('show_all.html', students=Students.query.all())
+
+
+@app.route('/', methods=['GET'])
 def home():
+    return render_template('show_stock.html', stocks=Stocks.query.all())
 
 
-
-    if request.method == 'POST':
-        if not request.form['name'] or not request.form['city'] or not request.form['addr']:
-            flash('Please enter all the fields', 'error')
-        else:
-            student = Students(
-                request.form['name'],
-                request.form['city'],
-                request.form['addr'])
-            db.session.add(student)
-            db.session.commit()
-            flash('Record was successfully added')
-            return redirect(url_for('home'))
-    return render_template('show_all.html', students=Students.query.all())
-
-
-
-@app.route('/test', methods=['GET', 'POST'])
-def test():
-
-    stockdb = StockDB(POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB)
-    stockdb.connect_db()
-    # Check existing tables
-    stockdb.exec_query("""SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'""")
-    stockdb.exec_query('''select * from stockhistory;''')
-
-    return render_template('show_stock.html')
+# @app.route('/test', methods=['GET', 'POST'])
+# def test():
+#
+#     stockdb = StockDB(POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB)
+#     stockdb.connect_db()
+#     # Check existing tables
+#     stockdb.exec_query("""SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'""")
+#     stockdb.exec_query('''select * from stocks;''')
+#
+#     return render_template('show_stock.html')
 
 
 
@@ -98,6 +102,9 @@ def report():
     from report import Report
     # sample_df = pd.read_csv(os.getcwd() + '/data/big_df.csv', index_col=False)
     # myreport = Report(sample_df)
+
+    if os.path.isfile("./static/ec2_report.pdf"):
+        return send_from_directory("/home/app/static", "ec2_report.pdf")
 
     stock_api = get_stockAPI()
     myreport = Report(stock_api.df)

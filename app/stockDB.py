@@ -49,7 +49,7 @@ class StockDB(object):
             except Exception as e:
                 logger.info("Waiting connection from db...%s...", self.conn_string_masked)
                 logger.info("Error...%s...", e)
-                if tried >= trials:
+                if tried > trials:
                     sys.exit("Cannot connect to DB:\n" + str(e))
                 time.sleep(3)
 

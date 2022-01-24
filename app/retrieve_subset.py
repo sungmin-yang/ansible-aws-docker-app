@@ -7,12 +7,13 @@ from stockDB import StockDB
 parser = argparse.ArgumentParser()
 parser.add_argument("-U", "--user", help="Type your DB user", required=True)
 parser.add_argument("-P", "--password", help="Type your DB user\'s password", required=True)
-parser.add_argument("-D", "--db", help="Show program version", required=True)
+parser.add_argument("-D", "--db", help="Type your DataBase name", required=True)
+parser.add_argument("-H", "--host", help="DB server host name")
 parser.add_argument("-F", "--filename", help="Your filename for saving generated.csv file", default="./data/generated.csv")
 args = parser.parse_args()
 
 
-stockdb = StockDB(args.user, args.password, args.db)
+stockdb = StockDB(args.user, args.password, args.db, db_host=args.host)
 stockdb.connect_db()
 
 # stockdb.exec_query('''select * from students limit 10;''')
