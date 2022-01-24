@@ -16,8 +16,12 @@ args = parser.parse_args()
 stockdb = StockDB(args.user, args.password, args.db, db_host=args.host)
 stockdb.connect_db()
 
-# stockdb.exec_query('''select * from students limit 10;''')
+# Check existing tables
+# stockdb.exec_query("""SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'""")
 
+
+# Simple query... but we need copy_expert to save a file.
+# stockdb.exec_query('''select * from students limit 10;''')
 
 sql = """
     COPY (

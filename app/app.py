@@ -110,7 +110,6 @@ def report():
     myreport = Report(stock_api.df)
     myreport.save_chart(fname="./static/ec2_report.pdf")
     myreport.save_chart(fname="./data/ec2_report.pdf")
-    # rendered_chart = report.render_for_html(format="png")
 
     return send_from_directory("/home/app/static", "ec2_report.pdf")
 
@@ -146,7 +145,7 @@ def get_stockAPI() -> StockAPI:
 
 
 if __name__ == '__main__':
-    logger.info("Safely waiting until DB is setup")
+    logger.info("Safely waiting until DB is setup...")
     time.sleep(5)
 
     utils.setup_database(app, db)
@@ -155,14 +154,9 @@ if __name__ == '__main__':
     stockdb.connect_db()
 
     stock_api = get_stockAPI()
+    # Need postgresql+psycopg2 for stockdb.engine. Needed for to_sql().
     stock_api.df.to_sql("stocks", stockdb.engine, if_exists='append', index=False)
 
     app.run(debug=True, host='0.0.0.0', port=5000)
-    # Check existing tables
-    # stockdb.exec_query("""SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'""")
-    # stockdb.exec_query('''select * from stockhistory;''')
 
-    # Need postgresql+psycopg2 for raw
-    # stock_api.df.to_sql("stockrat", stockdb.engine, if_exists='append', index=False)
-    # utils.wait_until_db_setup(db)
 
