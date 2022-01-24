@@ -65,12 +65,10 @@ class StockAPI(object):
         # Select columns we want
         self.df = self.df[['date', 'close', 'volume', 'symbol']]
 
+        # Cleaning
         self.df = self.df.astype(dtype={'symbol': 'string'})
         self.df.rename(columns={"symbol": "company"}, inplace=True)
-
-        # Nested is required.
-        self.df['date'] = pd.to_datetime(pd.to_datetime(self.df['date']).dt.strftime('%Y-%m-%d'))
-        self.df['date'] = pd.to_datetime(self.df.date)
+        self.df['date'] = pd.to_datetime(self.df['date']).dt.strftime('%Y-%m-%d')
 
         return self.df
 

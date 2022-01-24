@@ -1,5 +1,7 @@
 import os, argparse
-from flask import render_template, flash, redirect, request, url_for
+import time
+
+from flask import render_template, flash, redirect, request, url_for, send_from_directory
 import pandas as pd
 
 import stock_api_logger
@@ -99,13 +101,11 @@ def report():
 
     stock_api = get_stockAPI()
     myreport = Report(stock_api.df)
-    myreport.draw_chart(fname="./static/ec2_report.pdf")
-    myreport.draw_chart(fname="./data/ec2_report.pdf")
+    myreport.save_chart(fname="./static/ec2_report.pdf")
+    myreport.save_chart(fname="./data/ec2_report.pdf")
     # rendered_chart = report.render_for_html(format="png")
 
-    return render_template("report.html",
-                           chart_image="/home/app/static/ec2_report.pdf", # Flask check static dir
-                           )
+    return send_from_directory("/home/app/static", "ec2_report.pdf")
 
 
 def shutdown_server():
@@ -139,6 +139,9 @@ def get_stockAPI() -> StockAPI:
 
 
 if __name__ == '__main__':
+    logger.info("Safely waiting until DB is setup")
+    time.sleep(5)
+
     utils.setup_database(app, db)
 
     stockdb = StockDB(POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB)

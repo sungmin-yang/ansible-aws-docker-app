@@ -41,6 +41,8 @@ class Report(object):
 
         ymax, xmax = self.find_highest_stock_value_date()
         ymin, xmin = self.find_lowest_stock_value_date()
+        best_stock_day = self.get_best_stock_day()
+        worst_stock_day = self.get_worst_stock_day()
 
         fig, axs = plt.subplots(3, 1, constrained_layout=False)
         #         fig.tight_layout()
@@ -59,9 +61,9 @@ class Report(object):
         axs[0].set_ylabel('USD$')
 
         axs[0].xaxis.set_major_locator(plt.MaxNLocator(self.MAX_X_AXIS_NUMBER))
-        axs[0].annotate(f'Higest - {best_stock_day}', xy=(xpos, ymax), xytext=(xpos, ymax + 18), color='red',
+        axs[0].annotate(f'Higest - {best_stock_day}', xy=(xmax, ymax), xytext=(xmax, ymax + 18), color='red',
                         arrowprops=dict(facecolor='black', shrink=0.05), )
-        axs[0].annotate(f'Lowest - {worst_stock_day}', xy=(xposn, ymin + 5), xytext=(xposn, ymin + 22), color='blue',
+        axs[0].annotate(f'Lowest - {worst_stock_day}', xy=(xmin, ymin + 5), xytext=(xmin, ymin + 22), color='blue',
                         arrowprops=dict(facecolor='black', shrink=0.05), )
 
         # Adding margin.
@@ -80,9 +82,9 @@ class Report(object):
 
         # Table for best & worst days + amount of data
         table_data = [
-            ["best day", report.get_best_stock_day()],
-            ["worst day", report.get_worst_stock_day()],
-            ["amount stored data", report.get_amount_stored_data()]
+            ["best day", self.get_best_stock_day()],
+            ["worst day", self.get_worst_stock_day()],
+            ["amount stored data", self.get_amount_stored_data()]
         ]
         ax = axs[2]
         table = ax.table(cellText=table_data, loc='best', cellLoc='center')

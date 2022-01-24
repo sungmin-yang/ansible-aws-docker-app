@@ -24,14 +24,14 @@ class Students(db.Model):
 # 2,2022-01-12 00:00:00+00:00,177.179,AAPL
 class Stocks(db.Model):
     id = db.Column('id', db.Integer, primary_key=True)
-    date = db.Column('date', db.DateTime)
-    close = db.Column('high', db.REAL(20))
-    volume = db.Column('high', db.BIGINT(30))
+    date = db.Column('date', db.DATE)
+    close = db.Column('close', db.REAL(20))
+    volume = db.Column('volume', db.BIGINT())
     company = db.Column('company', db.String(20))
 
-    def __init__(self, id, date, close, volume,  company):
+    def __init__(self, date, close, volume,  company):
         logger.info("Creating Student table...")
-        self.id = id
+        # self.id = id
         self.date = date
         self.close = close
         self.volume = volume
