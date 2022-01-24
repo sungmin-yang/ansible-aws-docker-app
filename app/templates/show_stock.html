@@ -8,12 +8,6 @@
 	</h3>
 
 
-	<form action="{{ request.path }}" method="post">
-	    Company Symbol:<br>
-	    <input type="text" name="company"><br>
-	    <input type="submit" value="Submit">
-	</form>
-
 
 	<table>
 	    <thead>
@@ -23,18 +17,6 @@
 		    <th>High</th>
 		    <th>Company</th>
 		</tr>
-	    </thead>
-
-	    <tbody>
-	    {% for row in stocks %}
-		<tr>
-		    <td>{{ row.id }}</td>
-		    <td>{{ row.date }}</td>
-		    <td>{{ row.high }}</td>
-		    <td>{{ row.company }}</td>
-		</tr>
-	    {% endfor %}
-	    </tbody>
 	</table>
 
 

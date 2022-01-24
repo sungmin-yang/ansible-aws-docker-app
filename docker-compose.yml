@@ -1,5 +1,5 @@
 #Ansible docker-compose is written based on this file.
-
+# Using this file to test on your local machine / cloud server(ec2).
 
 version: "2"
 services:

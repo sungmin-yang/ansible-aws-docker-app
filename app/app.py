@@ -1,4 +1,4 @@
-import os, json
+import os, argparse
 from flask import render_template, flash, redirect, request, url_for
 import pandas as pd
 
@@ -13,8 +13,18 @@ POSTGRES_PASSWORD,
 POSTGRES_HOST,
 POSTGRES_PORT,
 POSTGRES_DB,
-APP_KEY
+APP_KEY,
+STOCK_API_KEY
 )
+
+# Get three args {{ TARGET_COMPANY }} {{ DATE_FROM }} {{ DATE_TO }}
+parser = argparse.ArgumentParser()
+parser.add_argument("-C", "--target_company", help="Type company name that you want to get stock info", required=True)
+parser.add_argument("-F", "--data_from", help="Type date from", required=True)
+parser.add_argument("-T", "--data_to", help="Type date to", required=True)
+args = parser.parse_args()
+
+
 
 
 SAMPLE_N_ROWS = 30
@@ -60,33 +70,24 @@ def home():
 
 
 
-# @app.route('/test', methods=['GET', 'POST'])
-# def test():
-#
-#     stock = Stocks.create_stocks_table(
-#         request.form['id'],
-#         request.form['date'],
-#         request.form['high'],
-#         request.form['company'])
-#
-#     if request.method == 'POST':
-#         if not request.form['company']:
-#             flash('Please enter all the fields', 'error')
-#         else:
-#             db.session.add(stock)
-#             db.session.commit()
-#             flash('Company was successfully found')
-#             return redirect(url_for('test'))
-#
-#     return render_template('show_stock.html', students=stock.get_model.query.all())
+@app.route('/test', methods=['GET', 'POST'])
+def test():
+
+    stockdb = StockDB(POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB)
+    stockdb.connect_db()
+    # Check existing tables
+    stockdb.exec_query("""SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'""")
+    stockdb.exec_query('''select * from stockhistory;''')
+
+    return render_template('show_stock.html')
 
 
 
 
-small_df = pd.read_csv(os.getcwd() + '/data/small_df.csv', index_col=False)
-@app.route('/test2', methods=['GET'])
-def test2():
-    return small_df.head(SAMPLE_N_ROWS).to_html(index=False)
+# small_df = pd.read_csv(os.getcwd() + '/data/small_df.csv', index_col=False)
+# @app.route('/test2', methods=['GET'])
+# def test2():
+#     return small_df.head(SAMPLE_N_ROWS).to_html(index=False)
 
 
 
@@ -105,6 +106,20 @@ def report():
                            )
 
 
+def shutdown_server():
+    func = request.environ.get('werkzeug.server.shutdown')
+    if func is None:
+        raise RuntimeError('Not running with the Werkzeug Server')
+    func()
+
+
+@app.get('/shutdown')
+def shutdown():
+    shutdown_server()
+    return 'Server shutting down...'
+
+
+
 
 # ---------------------  Web page rendering  END ---------------------
 # ---------------------  Web page rendering  END ---------------------
@@ -114,21 +129,24 @@ def report():
 
 if __name__ == '__main__':
     utils.setup_database(app, db)
+    app.run(debug=True, host='0.0.0.0', port=5000)
 
-
-    stock_api = StockAPI(access_key='6ca0f0f7528f082e26b191f19f84ff15',
-                         company_symbol='AAPL', date_from='2019-01-08', date_to='2022-01-14')
+    stock_api = StockAPI(access_key=STOCK_API_KEY,
+                         company_symbol=args.target_company,
+                         date_from=args.date_from,
+                         date_to=args.date_to)
     stock_api.get_api_result()
     stock_api.transform_to_dataframe()
     stock_api.save_dataframe_to_csv("data/ec2_generated.csv")
 
 
-
     stockdb = StockDB(POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB)
     stockdb.connect_db()
-    stockdb.exec_query('''select * from stockhistory;''')
+    # Check existing tables
+    # stockdb.exec_query("""SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'""")
+    # stockdb.exec_query('''select * from stockhistory;''')
 
-
-
+    # Need postgresql+psycopg2 for raw
+    # stock_api.df.to_sql("stockrat", stockdb.engine, if_exists='append', index=False)
     # utils.wait_until_db_setup(db)
-    app.run(debug=True, host='0.0.0.0', port=5000)
+
