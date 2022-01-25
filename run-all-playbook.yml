@@ -3,9 +3,6 @@
 # How to run this playbook
 # $ansible-playbook create-db-table-playbook.yml -i inventory.yml --vault-password-file .vaultpass
 
-#- import_playbook: install-requirements-playbook.yml
-#- import_playbook: docker-compose-playbook.yml
-
 - hosts: aws
 
   become: yes
@@ -19,25 +16,23 @@
     sub_playbooks_dir: "{{ playbook_dir }}/tasks"
     stock_app_dir: /var/local/stockapp
     ec2_mounted_data_dir: /var/local/stockapp/app/data
-      #    stock_app_dir: /home/ubuntu/stockapp
     git_repo: https://github.com/sungmin-yang/ansible-aws-docker-app.git
 
-    # Args for app.
+    # Args for app in a docker container
     target_company: AAPL
     date_from: 2021-01-01
     date_to: 2022-01-14
+    subset_num: 100
+    stock_table_name: stocks
+    million_table_name: random1m
 
 
   tasks:
-#    - import_tasks: "{{ sub_playbooks_dir }}/install-requirements-playbook.yml"
-#    - import_tasks: "{{ sub_playbooks_dir }}/git-repo-playbook.yml"
-#    - import_tasks: "{{ sub_playbooks_dir }}/docker-run-playbook.yml"
-#    - import_tasks: "{{ sub_playbooks_dir }}/generate-sample-db-playbook.yml"
-    - import_tasks: "{{ sub_playbooks_dir }}/retrieve_subset-playbook.yml"
-
-
-#    - name: Pause for 15 s to build app cache
-#      pause:
-#        seconds: 15
+    - import_tasks: "{{ sub_playbooks_dir }}/install-requirements-playbook.yml"
+    - import_tasks: "{{ sub_playbooks_dir }}/git-repo-playbook.yml"
+    - import_tasks: "{{ sub_playbooks_dir }}/docker-run-playbook.yml"
+    - import_tasks: "{{ sub_playbooks_dir }}/generate-sample-db-playbook.yml"
+    - import_tasks: "{{ sub_playbooks_dir }}/retrieve_subset-1m-playbook.yml"
+    - import_tasks: "{{ sub_playbooks_dir }}/store-gathered-data-to-ansible.yml"
 
 #    - import_tasks: "{{ sub_playbooks_dir }}/docker-down-playbook.yml"

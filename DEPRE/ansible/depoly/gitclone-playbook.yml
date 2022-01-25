@@ -34,6 +34,7 @@
       name:
         - docker
         - docker-compose
+        - psycopg2
 
 #  Simple ... but with shell
 #  - name: Install Docker
