@@ -1,11 +1,13 @@
 ---
+# ----- local testing setting ------
 #- name: Shut down docker
 #  hosts: localhost
 #  gather_facts: no
 #  tasks:
+# ----- local testing setting ------
 
 
-#    - name: Stop all services [Using docker-compose.yml]
+#    - name: Stop all services [By using docker-compose.yml]
 #      docker_compose:
 #        project_src: app
 #        build: no
@@ -26,9 +28,9 @@
       version: '2'
       services:
         web:
-          image: sungmindocker/skeleton:stockapp_v1
+          image: sungmindocker/skeleton:stockapp_v1_3_amd64
         db:
-          image: postgres:10
+          image: postgres:14
 
   register: output
 

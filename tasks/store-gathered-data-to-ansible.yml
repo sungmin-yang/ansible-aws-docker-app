@@ -5,7 +5,8 @@
           --password {{POSTGRES_PASSWORD}} \
           --db {{POSTGRES_DB}} \
           --host {{ POSTGRES_LOCAL_HOST }} \
-#              --filename ./files/gathered_data.csv"
+          --tablename {{ stock_table_name }} \
+          --filename ./data/gathered_data.csv"
   timeout: 30
   args:
     chdir: "{{ stock_app_dir }}/app"

@@ -1,12 +1,13 @@
 ---
-- name: Retrieve subset 100 from App server
+- name: Retrieve subset 100 through App server
   command: "python3 retrieve_subset.py \
           --user {{POSTGRES_USER}} \
           --password {{POSTGRES_PASSWORD}} \
           --db {{POSTGRES_DB}} \
           --host {{ POSTGRES_LOCAL_HOST }} \
-          --rownumber {{ subset_num }}"
-#              --filename ./files/generated3.csv
+          --tablename {{ million_table_name }} \
+          --rownumber {{ subset_num }} \
+          --filename ./data/subset100_from_1M.csv"
   timeout: 30
   args:
     chdir: "{{ stock_app_dir }}/app"
@@ -16,8 +17,8 @@
   debug:
     msg: "{{ out }}"
 
-- name: Store gathered data on ansible server file /tmp/gathered_data.csv
-  fetch:
-    src: "{{ stock_app_dir }}/app/data/gathered_data.csv"
-    dest: /tmp/gathered_data.csv
-    flat: yes
+#- name: Store gathered data on ansible server file /tmp/subset100_from_1M.csv
+#  fetch:
+#    src: "{{ ec2_mounted_data_dir }}/generated1m.csv"
+#    dest: /tmp/gathered_data.csv
+#    flat: yes

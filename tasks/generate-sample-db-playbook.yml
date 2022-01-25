@@ -1,14 +1,36 @@
 ---
-- name: Select query to db acme with positional arguments and non-default credentials
+- name: Generate a sample table with 1 million rows.
   community.postgresql.postgresql_query:
     db: '{{POSTGRES_DB}}'
     port: '{{POSTGRES_PORT}}'
     login_user: '{{POSTGRES_USER}}'
     login_password: '{{POSTGRES_PASSWORD}}'
     login_host: '{{POSTGRES_LOCAL_HOST}}'
-    query: SELECT * FROM Students;
+    path_to_script: "{{ stock_app_dir }}/sql/generate_1m.sql"
+#    query: SELECT * FROM random1m;
+    as_single_query: yes
   register: "out"
 
-- name: Show test output
+- name: Show registered output
+  debug:
+    msg: "{{ out }}"
+
+#- name: Run queries from SQL script
+#  postgresql_query:
+#    db: test_db
+#    path_to_script: /var/lib/pgsql/test.sql
+
+
+- name: Get total number of generated rows for 1M.
+  community.postgresql.postgresql_query:
+    db: '{{POSTGRES_DB}}'
+    port: '{{POSTGRES_PORT}}'
+    login_user: '{{POSTGRES_USER}}'
+    login_password: '{{POSTGRES_PASSWORD}}'
+    login_host: '{{POSTGRES_LOCAL_HOST}}'
+    query: SELECT * FROM random1m;
+  register: "out"
+
+- name: Show registered output
   debug:
     msg: "{{ out }}"
