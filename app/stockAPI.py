@@ -1,25 +1,9 @@
 import requests
 import pandas as pd
 import json
+import stock_api_logger
 
-ACCESS_KEY = "6ca0f0f7528f082e26b191f19f84ff15"
-SYMBOL = 'AAPL'
-DATE_FROM = '2019-01-08'
-DATE_TO = '2022-01-14'
-# DO SOMETHING WITH OS.ENV
-
-params = {
-  'access_key': ACCESS_KEY
-}
-
-
-url  = f'http://api.marketstack.com/v1/eod\
-?access_key={ACCESS_KEY}\
-&symbols={SYMBOL}\
-&date_from={DATE_FROM}\
-&date_to={DATE_TO}\
-&limit=10000'
-
+logger = stock_api_logger.log_factory().getLogger()
 
 
 class StockAPI(object):
@@ -30,13 +14,14 @@ class StockAPI(object):
                         ):
         self.access_key = access_key
         self.company_symbol = company_symbol
+        #supported date formats: Y - m - d, Y - m - d H: i:s & ISO - 8601(Y - m - d\\TH: i:sO)
         self.date_from = date_from
         self.date_to = date_to
-        self.request_url = url  = f'http://api.marketstack.com/v1/eod\
-?access_key={ACCESS_KEY}\
-&symbols={SYMBOL}\
-&date_from={DATE_FROM}\
-&date_to={DATE_TO}\
+        self.request_url = f'http://api.marketstack.com/v1/eod\
+?access_key={access_key}\
+&symbols={company_symbol}\
+&date_from={date_from}\
+&date_to={date_to}\
 &limit=10000'
         self.params = {'access_key': access_key }
 
@@ -47,17 +32,16 @@ class StockAPI(object):
 
 
     def get_api_result(self) -> json:
-        self.api_result = requests.get(self.request_url, params)
+        logger.info('Requesting API to get Stock data...')
+        logger.info('Using URL: %s', self.request_url)
+        self.api_result = requests.get(self.request_url, self.params)
         self.api_response = self.api_result.json()
+        logger.info('API response: %s', self.api_result)
         return self.api_response
 
-    def get_result_dataframe(self) -> pd.DataFrame:
-        if self.api_response == None or self.df == None:
-            self.get_api_result()
-            self.transform_to_dataframe()
-        return self.df
 
-    def transform_to_dataframe(self) -> pd.DataFrame:
+    def api_result_to_dataframe(self) -> pd.DataFrame:
+        logger.info('Transforming api result (json) to pandas.DataFrame.')
         self.df = pd.DataFrame(self.api_response['data'])
 
         # Drop NaN columns, which is not the case here.
@@ -73,7 +57,9 @@ class StockAPI(object):
         return self.df
 
     def save_dataframe_to_csv(self, path: str="data/100rows.csv") -> None:
+        logger.info('Saving dataframe to %s', path)
         self.df.to_csv(path, index=False, index_label=False)
 
-    def read_dataframe_to_csv(self, path: str="data/100rows.csv") -> None:
+    def read_csv_to_dataframe(self, path: str="data/100rows.csv") -> None:
+        logger.info('Reading csv file into DataFrame from %s', path)
         self.df.read_csv(path, index_col=False)

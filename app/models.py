@@ -5,33 +5,20 @@ logger = stock_api_logger.log_factory().getLogger()
 
 db = SQLAlchemy()
 
-class Students(db.Model):
-    id = db.Column('student_id', db.Integer, primary_key=True)
-    name = db.Column(db.String(100))
-    city = db.Column(db.String(50))
-    addr = db.Column(db.String(200))
 
-    def __init__(self, name, city, addr):
-        logger.info("Creating Student table...")
-        self.name = name
-        self.city = city
-        self.addr = addr
-
-
-# id,date,high,company
-# 0,2022-01-14 00:00:00+00:00,173.78,AAPL
-# 1,2022-01-13 00:00:00+00:00,176.62,AAPL
-# 2,2022-01-12 00:00:00+00:00,177.179,AAPL
+# id,date,close,volume,company
+# 1,2022-01-14,173.07,80355000,AAPL
+# 2,2022-01-13,172.19,81572060,AAPL
+# 3,2022-01-12,175.53,70577429,AAPL
+# 4,2022-01-11,175.08,76015600,AAPL
 class Stocks(db.Model):
-    id = db.Column('id', db.Integer, primary_key=True)
-    date = db.Column('date', db.DATE)
+    date = db.Column('date', db.DATE, primary_key=True)
     close = db.Column('close', db.REAL(20))
     volume = db.Column('volume', db.BIGINT())
     company = db.Column('company', db.String(20))
 
     def __init__(self, date, close, volume,  company):
         logger.info("Creating Student table...")
-        # self.id = id
         self.date = date
         self.close = close
         self.volume = volume

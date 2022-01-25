@@ -37,7 +37,7 @@ class Report(object):
     def get_amount_stored_data(self) -> int:
         return self.df.shape[0]
 
-    def draw_chart(self, company_name: str = "AAPL") -> None:
+    def draw_chart(self, company_symbol: str = "AAPL") -> None:
 
         ymax, xmax = self.find_highest_stock_value_date()
         ymin, xmin = self.find_lowest_stock_value_date()
@@ -49,7 +49,7 @@ class Report(object):
         #         fig = plt.figure(dpi=150)
 
         # Saving suptitle and pass it to save_chart() because it does not appear in png, pdf files
-        self.suptitle = fig.suptitle(f'Report: Financial information of [{company_name}]\n',
+        self.suptitle = fig.suptitle(f'Report: Financial information of [{company_symbol}]\n',
                                      fontsize=28,
                                      horizontalalignment="center",
                                      y=1.12)
@@ -108,8 +108,10 @@ class Report(object):
         fig = plt.gcf()
         fig.set_size_inches(14, 10)
 
-    def save_chart(self, fname: str="./static/chart.pdf") -> None:
-        self.draw_chart()
+    def save_chart(self,
+                   company_symbol: str="AAPL",
+                   fname: str="./static/chart.pdf") -> None:
+        self.draw_chart(company_symbol=company_symbol)
         chart_type = fname.split(".")[-1]
         if chart_type == "pdf":
             plt.savefig(fname, bbox_inches='tight', pad_inches=1, bbox_extra_artists=[self.suptitle])

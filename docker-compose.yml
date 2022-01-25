@@ -10,8 +10,8 @@ services:
 #    command: python3 app.py
     command: "python3 app.py \
                       --target_company AAPL \
-                      --date_from 2020-01-01 \
-                      --date_to 2021-0101"
+                      --date_from 2021-01-08 \
+                      --date_to 2022-01-26"
     ports:
       - "5000:5000"
     volumes:

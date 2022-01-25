@@ -30,8 +30,14 @@
 
 > Using Pandas to cleaning data and directly store it to DB(Postgres) server.\
 > Using Matplotlib to draw a chart and table, adding unique ID and generated time at the bottom.\
-> Using Flask to serve a webpage for clients to download a generated report.\
-> WEBPAGE.....
+> Using Flask to serve a webpage for clients to download a generated report.
+
+
+### Generated report sample (Go to ... TODO web page)
+<p align="center">
+  <img width="700" height="400" src="img/ec2_report.png">
+</p>
+<br>
 
 
 ## Part 2. Automation
@@ -47,7 +53,9 @@
 > App server is up and running on EC2 instance. We run **app/retrieve_subset.py** in a playbook **retrieve_subset-1m-playbook.yml**
 
 - store gathered data on ansible server file /tmp/gathered_data.csv
-> Fetch data with ansible.builtin.fetch in **store-gathered-data-to-ansible.yml**
+> Fetch data with ansible.builtin.fetch in **store-gathered-data-to-ansible.yml**\
+
+
 
 <br>
 
@@ -76,25 +84,37 @@
 
 <br>
 
-## How to run:
+## Demo
+link...
+
+
+
+## How to run (from your local machine):
 #### First, we need to install below packages to run ansible on our host side.
 1. ansible
 2. "psycopg2" or alternative "psycopg2-binary"
-3. community.postgresql (with $ansible-galaxy collection install community.postgresql)
+3. community.postgresql (with `$ansible-galaxy collection install community.postgresql`)
 
 #### Then, need
 1. AWS pem key
 2. ".env" file which contains credential data for DB and API
 3. Setting "inventory.yml" provide **proper remote IP address**
-4. Setting ".vaultpass" and "vault.yml" with ($ansible-vault create vault.yml)
+4. Setting ".vaultpass" and "vault.yml" with (`$ansible-vault create vault.yml`)
 
 #### Then run with
->$ ansible-playbook run-all-playbook.yml -i inventory-new.yml --vault-password-file .vaultpass
+```
+ansible-playbook run-all-playbook.yml -i inventory-new.yml --vault-password-file .vaultpass
+```
+---
+#### You can run docker-compose on your local machine instead of running cloud servers.
+`$docker-copose up`
 
+#### Build docker image and running [Not recommended]
+`$docker-compose up --build`
 
+---
 ## Issues
 There are some issues behind of scenes.
-Issues 
 
 1. Building docker image on Mac m1 and shipping to intel/amd64 based system caused some problems
 > Solved by building two docker images for each arch arm64 and intel/amd64

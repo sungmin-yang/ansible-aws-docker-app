@@ -2,7 +2,6 @@ import os, argparse
 import time
 
 from flask import render_template, flash, redirect, request, url_for, send_from_directory
-import pandas as pd
 
 import stock_api_logger
 import utils
@@ -27,8 +26,6 @@ parser.add_argument("-T", "--date_to", help="Type date to", required=True)
 args = parser.parse_args()
 
 
-
-
 SAMPLE_N_ROWS = 30
 logger = stock_api_logger.log_factory().getLogger()
 
@@ -42,7 +39,7 @@ app = utils.get_flask_app(POSTGRES_USER,
                           POSTGRES_DB,
                           APP_KEY)
 
-from models import db, Students, Stocks  # Require db object
+from models import db, Stocks  # Require db object
 db.init_app(app)
 
 
@@ -53,9 +50,6 @@ db.init_app(app)
 # ---------------------  Web page rendering  START ---------------------
 # @app.route('/', methods=['GET', 'POST'])
 # def home():
-#
-#
-#
 #     if request.method == 'POST':
 #         if not request.form['name'] or not request.form['city'] or not request.form['addr']:
 #             flash('Please enter all the fields', 'error')
@@ -76,42 +70,35 @@ def home():
     return render_template('show_stock.html', stocks=Stocks.query.all())
 
 
-# @app.route('/test', methods=['GET', 'POST'])
-# def test():
-#
-#     stockdb = StockDB(POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB)
-#     stockdb.connect_db()
-#     # Check existing tables
-#     stockdb.exec_query("""SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'""")
-#     stockdb.exec_query('''select * from stocks;''')
-#
-#     return render_template('show_stock.html')
-
-
-
-
-# small_df = pd.read_csv(os.getcwd() + '/data/small_df.csv', index_col=False)
-# @app.route('/test2', methods=['GET'])
-# def test2():
-#     return small_df.head(SAMPLE_N_ROWS).to_html(index=False)
-
-
 
 @app.route("/report")
 def report():
-    from report import Report
-    # sample_df = pd.read_csv(os.getcwd() + '/data/big_df.csv', index_col=False)
-    # myreport = Report(sample_df)
-
     if os.path.isfile("./static/ec2_report.pdf"):
+        logger.info("File already exist...: ec2_report.pdf")
         return send_from_directory("/home/app/static", "ec2_report.pdf")
 
+    from report import Report
     stock_api = get_stockAPI()
     myreport = Report(stock_api.df)
     myreport.save_chart(fname="./static/ec2_report.pdf")
     myreport.save_chart(fname="./data/ec2_report.pdf")
 
     return send_from_directory("/home/app/static", "ec2_report.pdf")
+
+@app.route('/download/<companysymbol>')
+def report_generic(companysymbol):
+    fname = f"{companysymbol}.pdf"
+    if os.path.isfile("./static/" + fname):
+        logger.info("File already exist...: %s", fname)
+        return send_from_directory("/home/app/static", fname)
+
+    from report import Report
+    stock_api = get_stockAPI(company_symbol=companysymbol)
+    myreport = Report(stock_api.df)
+    myreport.save_chart(company_symbol=companysymbol, fname="./static/" + fname)
+    myreport.save_chart(company_symbol=companysymbol, fname="./data/"   + fname)
+
+    return send_from_directory("/home/app/static", fname)
 
 
 def shutdown_server():
@@ -127,14 +114,16 @@ def shutdown():
     return 'Server shutting down...'
 
 
-def get_stockAPI() -> StockAPI:
+def get_stockAPI(company_symbol: str="AAPL") -> StockAPI:
+
     stock_api = StockAPI(access_key=STOCK_API_KEY,
-                         company_symbol=args.target_company,
-                         date_from=args.date_from,
-                         date_to=args.date_to)
+                             company_symbol=company_symbol,
+                             date_from=args.date_from,
+                             date_to=args.date_to)
     stock_api.get_api_result()
-    stock_api.transform_to_dataframe()
+    stock_api.api_result_to_dataframe()
     stock_api.save_dataframe_to_csv("data/ec2_generated.csv")
+
     return stock_api
 
 
@@ -153,9 +142,9 @@ if __name__ == '__main__':
     stockdb = StockDB(POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_DB)
     stockdb.connect_db()
 
-    stock_api = get_stockAPI()
+    stock_api = get_stockAPI(company_symbol=args.target_company)
     # Need postgresql+psycopg2 for stockdb.engine. Needed for to_sql().
-    stock_api.df.to_sql("stocks", stockdb.engine, if_exists='append', index=False)
+    stock_api.df.to_sql("stocks", stockdb.engine, if_exists='replace', index=False)
 
     app.run(debug=True, host='0.0.0.0', port=5000)
 
