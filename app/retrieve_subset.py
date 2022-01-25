@@ -9,6 +9,7 @@ parser.add_argument("-U", "--user", help="Type your DB user", required=True)
 parser.add_argument("-P", "--password", help="Type your DB user\'s password", required=True)
 parser.add_argument("-D", "--db", help="Type your DataBase name", required=True)
 parser.add_argument("-H", "--host", help="DB server host name")
+parser.add_argument("-T", "--tablename", help="Type table name you want to query")
 parser.add_argument("-R", "--rownumber", help="number of rows you want to retrieve", default="NULL")
 parser.add_argument("-F", "--filename", help="Your filename for saving generated.csv file", default="./data/gathered_data.csv")
 args = parser.parse_args()
@@ -26,7 +27,11 @@ stockdb.connect_db()
 
 sql = """
     COPY (
-        select * from stocks limit """+args.rownumber+"""
+        select * from """\
+            +args.tablename+\
+            """ limit """\
+            +args.rownumber+\
+            """
     ) TO STDOUT WITH CSV HEADER
 """
 
