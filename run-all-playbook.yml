@@ -28,12 +28,12 @@
 
 
   tasks:
-#    - import_tasks: "{{ sub_playbooks_dir }}/install-requirements-playbook.yml"
-#    - import_tasks: "{{ sub_playbooks_dir }}/git-repo-playbook.yml"
-#    - import_tasks: "{{ sub_playbooks_dir }}/docker-run-playbook.yml"
-#    - import_tasks: "{{ sub_playbooks_dir }}/generate-sample-db-playbook.yml"
+    - import_tasks: "{{ sub_playbooks_dir }}/install-requirements-playbook.yml"
+    - import_tasks: "{{ sub_playbooks_dir }}/git-repo-playbook.yml"
+    - import_tasks: "{{ sub_playbooks_dir }}/docker-run-playbook.yml"
+    - import_tasks: "{{ sub_playbooks_dir }}/generate-sample-db-playbook.yml"
     - import_tasks: "{{ sub_playbooks_dir }}/retrieve_subset-1m-playbook.yml"
-#    - import_tasks: "{{ sub_playbooks_dir }}/store-gathered-data-to-ansible.yml"
+    - import_tasks: "{{ sub_playbooks_dir }}/store-gathered-data-to-ansible.yml"
 
 #    Shutting down docker containers.
 #    - import_tasks: "{{ sub_playbooks_dir }}/docker-down-playbook.yml"
