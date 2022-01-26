@@ -9,6 +9,17 @@
 
 <br>
 
+## EC2 server is up and running now.
+Flask webpage sample with stoc price.
+> http://ec2-44-202-26-113.compute-1.amazonaws.com:5000 <br>
+
+Download a generated report for AAPL
+> http://ec2-44-202-26-113.compute-1.amazonaws.com:5000/report <br>
+
+Download a generated report for other companies. (Microsoft here)
+> http://ec2-44-202-26-113.compute-1.amazonaws.com:5000/download/MS 
+
+
 ## Part 1. Programming in Python
 
 - use public REST API to get financial historic data about AAPL stocks 
@@ -33,15 +44,16 @@
 > Using Flask to serve a webpage for clients to download a generated report.
 
 
-### Generated report sample (Go to ... TODO web page)
-Go to `ec2 .....:5000/report`
+### Generated report sample
+
 <p align="center">
   <img  src="img/ec2_report.png">
 </p>
 <br>
 
-### Plus... Can query all companies (e.g., MS)
-Go to ...
+### Plus... We can query other companies (e.g., MS)
+Type /download/COMPANY_SYMBOL \
+e.g.,
 ```
 ec2 .....:5000/download/MS
 ec2 .....:5000/download/OTHER_COMPANY_SYMBOL
@@ -95,8 +107,13 @@ ec2 .....:5000/download/OTHER_COMPANY_SYMBOL
 
 <br>
 
-## Demo
-link...
+## Demo: reproduce same result
+Environment
+>Local machine(Ansible): MacBook Air (M1)\
+EC2 instance: Ubuntu Server 20.04 LTS (HVM), SSD Volume Type(64-bit (x86)
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/8xaU6H1pz1Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
 
 
 
