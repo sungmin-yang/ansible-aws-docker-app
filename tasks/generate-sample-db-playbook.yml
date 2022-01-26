@@ -9,28 +9,28 @@
     path_to_script: "{{ stock_app_dir }}/sql/generate_1m.sql"
 #    query: SELECT * FROM random1m;
     as_single_query: yes
-  register: "out"
+  register: output
 
-- name: Show registered output
-  debug:
-    msg: "{{ out }}"
-
-#- name: Run queries from SQL script
-#  postgresql_query:
-#    db: test_db
-#    path_to_script: /var/lib/pgsql/test.sql
+- debug:
+    var: output
 
 
-- name: Get total number of generated rows for 1M.
+- name: Get a total number of generated rows.
   community.postgresql.postgresql_query:
     db: '{{POSTGRES_DB}}'
     port: '{{POSTGRES_PORT}}'
     login_user: '{{POSTGRES_USER}}'
     login_password: '{{POSTGRES_PASSWORD}}'
     login_host: '{{POSTGRES_LOCAL_HOST}}'
-    query: SELECT * FROM random1m;
-  register: "out"
+    query: SELECT COUNT(*) FROM random1m;
+  register: out
 
-- name: Show registered output
-  debug:
-    msg: "{{ out }}"
+- debug:
+    var: out
+
+- name: Check there are 1 million rows are genrated.
+  assert:
+    that:
+    - out.query_result[0].count|int == 1000000
+    fail_msg: "Number of COUNT(*) FROM our table is not 1000000"
+    success_msg: "There are exact 1000000 rows exist in our table."

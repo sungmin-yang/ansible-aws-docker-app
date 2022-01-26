@@ -47,7 +47,7 @@ ec2 .....:5000/download/MS
 ec2 .....:5000/download/OTHER_COMPANY_SYMBOL
 ```
 <p align="center">
-  <img width="300" height="200" src="img/ec2_report.png">
+  <img width="600" height="400" src="img/MS.png">
 </p>
 <br>
 
@@ -100,7 +100,7 @@ link...
 
 
 
-## How to run (from your local machine):
+## How to run (on local machine):
 #### First, we need to install below packages to run ansible on our host side.
 1. ansible
 2. "psycopg2" or alternative "psycopg2-binary"

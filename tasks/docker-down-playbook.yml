@@ -19,7 +19,7 @@
 
 
 
-- name: Stop all services [Using ansible playbook]
+- name: Stop all docker services [Using ansible playbook]
   docker_compose:
     project_name: stockapp
     build: no

@@ -1,5 +1,4 @@
 #!/usr/bin/python3
-import os
 import argparse
 from stockDB import StockDB
 
@@ -21,10 +20,8 @@ stockdb.connect_db()
 # Check existing tables
 # stockdb.exec_query("""SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'""")
 
-
-# Simple query... but we need copy_expert to save a file.
-# stockdb.exec_query('''select * from students limit 10;''')
-
+# We need copy_expert() to save a file.
+# e.g., stockdb.exec_query('''select * from students limit 10;''')
 sql = """
     COPY (
         select * from """\

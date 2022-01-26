@@ -39,25 +39,9 @@
   - debug:
       var: output
 
-  - name: Pause for 10 s to safely run app & db
-    pause:
-      seconds: 10
 
-  - assert:
+  - name: Checking if all docker containers are running
+    assert:
       that:
         - "output.services.web.stockapp_web_1.state.running"
         - "output.services.db.stockapp_db_1.state.running"
-#
-#      - "output.services.db.stockapp_db_1.state.running"
-#      - "output.services.stockapp.stockapp_stockapp_1.state.running"
-
-
-#    - name: Get infos on container
-#      docker_container_info:
-#        name: stockapp_web_1
-#      register: result
-#
-#    - name: Print information about container
-#      debug:
-#        var: result.container
-

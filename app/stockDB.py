@@ -54,15 +54,12 @@ class StockDB(object):
                 time.sleep(3)
 
 
-
-    # small_df.to_sql('stockhistory', con=conn, if_exists='append',
-    #           index=False)
-
     def exec_query(self, query: str):
         if None in [self.db, self.conn, self.cursor]:
             self.connect_db()
-        # self.cursor.execute('''select * from stockhistory;''')
+
         self.cursor.execute(query)
+        # e.g., self.cursor.execute('''select * from stocks;''')
 
         try:
             for i in self.cursor.fetchall():
@@ -73,7 +70,7 @@ class StockDB(object):
         try:
             for i in self.cursor.fetchall():
                 logger.info(i)
-        except: print("nothing happened...")
+        except: logger.info("Nothing happened...")
 
 
     def store_dataframe_to_sql(self, data_frame, table_name: str):

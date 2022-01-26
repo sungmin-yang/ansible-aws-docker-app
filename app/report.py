@@ -2,7 +2,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import uuid
 from datetime import datetime
+import stock_api_logger
 
+logger = stock_api_logger.log_factory().getLogger()
 
 class Report(object):
     MAX_X_AXIS_NUMBER = 6
@@ -10,7 +12,7 @@ class Report(object):
     def __init__(self, cleaned_dataframe: pd.DataFrame):
         self.df = cleaned_dataframe
         self.sort_by_date()
-
+        logger.info("Report obj is created.")
     def sort_by_date(self):
         self.df.sort_values(by='date', ascending=True, inplace=True)
 
@@ -38,6 +40,7 @@ class Report(object):
         return self.df.shape[0]
 
     def draw_chart(self, company_symbol: str = "AAPL") -> None:
+        logger.info("Drawing char for %s", company_symbol)
 
         ymax, xmax = self.find_highest_stock_value_date()
         ymin, xmin = self.find_lowest_stock_value_date()
@@ -45,8 +48,6 @@ class Report(object):
         worst_stock_day = self.get_worst_stock_day()
 
         fig, axs = plt.subplots(3, 1, constrained_layout=False)
-        #         fig.tight_layout()
-        #         fig = plt.figure(dpi=150)
 
         # Saving suptitle and pass it to save_chart() because it does not appear in png, pdf files
         self.suptitle = fig.suptitle(f'Report: Financial information of [{company_symbol}]\n',
@@ -54,7 +55,7 @@ class Report(object):
                                      horizontalalignment="center",
                                      y=1.12)
 
-        # Main chart
+        # 1. Main chart
         axs[0].plot(self.df['date'], self.df["close"])
         axs[0].set_title('Stock chart')
         axs[0].set_xlabel('Date')
@@ -74,13 +75,13 @@ class Report(object):
                             wspace=0.4,
                             hspace=0.4)
 
-        # volume chart
+        # 2. Trading volume chart
         axs[1].bar(self.df.index, self.df['volume'])
         axs[1].set_title('volume of trading')
         axs[1].set_xlabel('Date')
         axs[1].set_ylabel('Number of stocks')
 
-        # Table for best & worst days + amount of data
+        # 3. Table for best & worst days + amount of data
         table_data = [
             ["best day", self.get_best_stock_day()],
             ["worst day", self.get_worst_stock_day()],
@@ -95,7 +96,7 @@ class Report(object):
         # Adding margin.
         plt.subplots_adjust(bottom=0.02)
 
-        # Adding document id and generated time.
+        # 4. Adding document id and generated time.
         id_and_time = "ID: {}  Time: {}".format(str(uuid.uuid4()), datetime.now().strftime('%Y-%m-%d %H:%M:%S'))
         plt.text(1,
                  -0.02,
@@ -108,16 +109,21 @@ class Report(object):
         fig = plt.gcf()
         fig.set_size_inches(14, 10)
 
+        logger.info("Successfully drew a chart for %s", company_symbol)
+
     def save_chart(self,
                    company_symbol: str="AAPL",
                    fname: str="./static/chart.pdf") -> None:
-        self.draw_chart(company_symbol=company_symbol)
+        logger.info("Saving a generated report for %s", company_symbol)
         chart_type = fname.split(".")[-1]
+        self.draw_chart(company_symbol=company_symbol)
+
         if chart_type == "pdf":
             plt.savefig(fname, bbox_inches='tight', pad_inches=1, bbox_extra_artists=[self.suptitle])
         else:
             plt.savefig(fname)
 
+        logger.info("Successfully saved a report for %s", company_symbol)
 
 
 

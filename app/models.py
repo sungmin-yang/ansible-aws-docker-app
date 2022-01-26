@@ -18,7 +18,7 @@ class Stocks(db.Model):
     company = db.Column('company', db.String(20))
 
     def __init__(self, date, close, volume,  company):
-        logger.info("Creating Student table...")
+        logger.info("Creating Stocks table with primary key: %s", date)
         self.date = date
         self.close = close
         self.volume = volume

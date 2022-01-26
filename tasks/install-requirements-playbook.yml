@@ -1,9 +1,4 @@
 ---
-#- name: Install docker
-#  package:
-#    name: docker
-#    state: present
-
 - name: Install packages for Docker and Pytnon.
   block:
 

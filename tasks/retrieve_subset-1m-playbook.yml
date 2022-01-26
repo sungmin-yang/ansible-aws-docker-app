@@ -17,8 +17,8 @@
   debug:
     msg: "{{ out }}"
 
-#- name: Store gathered data on ansible server file /tmp/subset100_from_1M.csv
-#  fetch:
-#    src: "{{ ec2_mounted_data_dir }}/generated1m.csv"
-#    dest: /tmp/gathered_data.csv
-#    flat: yes
+- name: Store subset on ansible server in /tmp/subset100_from_1M.csv
+  fetch:
+    src: "{{ ec2_mounted_data_dir }}/subset100_from_1M.csv"
+    dest: /tmp/subset100_from_1M.csv
+    flat: yes
