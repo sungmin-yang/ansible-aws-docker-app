@@ -18,7 +18,7 @@
     ec2_mounted_data_dir: /var/local/stockapp/app/data
     git_repo: https://github.com/sungmin-yang/ansible-aws-docker-app.git
 
-    # Args for app in a docker container
+    # Args for app server (a docker container)
     target_company: AAPL
     date_from: 2021-01-01
     date_to: 2022-01-14
@@ -35,4 +35,5 @@
     - import_tasks: "{{ sub_playbooks_dir }}/retrieve_subset-1m-playbook.yml"
     - import_tasks: "{{ sub_playbooks_dir }}/store-gathered-data-to-ansible.yml"
 
+#    Shutting down docker containers.
 #    - import_tasks: "{{ sub_playbooks_dir }}/docker-down-playbook.yml"

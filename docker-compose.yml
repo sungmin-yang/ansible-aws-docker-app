@@ -5,9 +5,9 @@ version: "2"
 services:
   stockapp:
     image: sungmindocker/skeleton:stockapp_v1_3_amd64
+# Use build if you want to build from scratch.
 #    build: .
     env_file: .env
-#    command: python3 app.py
     command: "python3 app.py \
                       --target_company AAPL \
                       --date_from 2021-01-08 \
