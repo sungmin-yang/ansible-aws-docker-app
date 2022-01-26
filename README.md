@@ -112,9 +112,8 @@ Environment
 >Local machine(Ansible): MacBook Air (M1)\
 EC2 instance: Ubuntu Server 20.04 LTS (HVM), SSD Volume Type(64-bit (x86)
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/8xaU6H1pz1Q" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-
-
+Play video
+[![IMAGE ALT TEXT](http://img.youtube.com/vi/8xaU6H1pz1Q/0.jpg)](http://www.youtube.com/watch?v=8xaU6H1pz1Q "Demo ansible-aws-docker")
 
 
 ## How to run (on local machine):
