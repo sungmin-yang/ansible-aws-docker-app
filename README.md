@@ -34,11 +34,22 @@
 
 
 ### Generated report sample (Go to ... TODO web page)
+Go to `ec2 .....:5000/report`
 <p align="center">
-  <img width="700" height="400" src="img/ec2_report.png">
+  <img  src="img/ec2_report.png">
 </p>
 <br>
 
+### Plus... Can query all companies (e.g., MS)
+Go to ...
+```
+ec2 .....:5000/download/MS
+ec2 .....:5000/download/OTHER_COMPANY_SYMBOL
+```
+<p align="center">
+  <img width="300" height="200" src="img/ec2_report.png">
+</p>
+<br>
 
 ## Part 2. Automation
 
@@ -99,7 +110,7 @@ link...
 1. AWS pem key
 2. ".env" file which contains credential data for DB and API
 3. Setting "inventory.yml" provide **proper remote IP address**
-4. Setting ".vaultpass" and "vault.yml" with (`$ansible-vault create vault.yml`)
+4. Create "vault.yml" and ".vaultpass"  with (`$ansible-vault create vault.yml`)
 
 #### Then run with
 ```
@@ -109,7 +120,7 @@ ansible-playbook run-all-playbook.yml -i inventory-new.yml --vault-password-file
 #### You can run docker-compose on your local machine instead of running cloud servers.
 `$docker-copose up`
 
-#### Build docker image and running [Not recommended]
+#### Build docker image and running **[Not recommended]**
 `$docker-compose up --build`
 
 ---
@@ -122,6 +133,6 @@ There are some issues behind of scenes.
 2. Building docker image with python dependencies takes **REALLY** long time, possibly up to 15-20 min
 > I prebuilt and push it to the docker image on https://hub.docker.com/repository/docker/sungmindocker/skeleton \
 > Just pull this image in the docker-compose file
-> > However, you can build docker image and run docker-compose if you want. just use "build" option in "docker-compose.yml" instead of "image".
+> > However, you can build a docker image yourself and run docker-compose. Use "build" option in "docker-compose.yml" instead of "image".
 
 
