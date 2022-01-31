@@ -52,9 +52,9 @@ def home():
 
 @app.route("/report")
 def report():
-    if os.path.isfile("./static/ec2_report.pdf"):
-        logger.info("File already exist...: ec2_report.pdf")
-        return send_from_directory("/home/app/static", "ec2_report.pdf")
+    # if os.path.isfile("./static/ec2_report.pdf"):
+    #     logger.info("File already exist...: ec2_report.pdf")
+    #     return send_from_directory("/home/app/static", "ec2_report.pdf")
 
     from report import Report
     stock_api = get_stockAPI()
@@ -67,9 +67,9 @@ def report():
 @app.route('/download/<companysymbol>')
 def report_generic(companysymbol):
     fname = f"{companysymbol}.pdf"
-    if os.path.isfile("./static/" + fname):
-        logger.info("File already exist...: %s", fname)
-        return send_from_directory("/home/app/static", fname)
+    # if os.path.isfile("./static/" + fname):
+    #     logger.info("File already exist...: %s", fname)
+    #     return send_from_directory("/home/app/static", fname)
 
     from report import Report
     stock_api = get_stockAPI(company_symbol=companysymbol)
