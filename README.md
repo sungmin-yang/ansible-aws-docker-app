@@ -9,15 +9,15 @@
 
 <br>
 
-## EC2 server is up and running now.
+## EC2 server is up and running now (was running until 5th Feb 2022)
 Flask webpage sample with stoc price.
-> http://ec2-44-202-26-113.compute-1.amazonaws.com:5000 <br>
+> ~~http://ec2-44-202-26-113.compute-1.amazonaws.com:5000~~ <br>
 
 Download a generated report for AAPL
-> http://ec2-44-202-26-113.compute-1.amazonaws.com:5000/report <br>
+> ~~http://ec2-44-202-26-113.compute-1.amazonaws.com:5000/report~~ <br>
 
 Download a generated report for other companies. (Microsoft here)
-> http://ec2-44-202-26-113.compute-1.amazonaws.com:5000/download/MS 
+> ~~http://ec2-44-202-26-113.compute-1.amazonaws.com:5000/download/MS~~ 
 
 
 ## Part 1. Programming in Python
